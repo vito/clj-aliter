@@ -31,7 +31,7 @@
 
 
 (defn accept-connection [handler server-socket selector]
-  (let [channel (-> server-socket (.accept) (.getChannel))]
+  (let [channel (.getChannel (.accept server-socket))]
     (println "Connected to" channel)
     (.configureBlocking channel false)
     (.register channel selector SelectionKey/OP_READ (agent handler))))
