@@ -3,6 +3,7 @@
   :url "http://projectaliter.com/"
 
   :dependencies [[org.clojure/clojure "1.3.0"]
-                 [hexdump "0.1.0"]]
+                 [hexdump "0.1.0"]
+                 [criterium "0.2.0"]]
 
   :main clj-aliter.core)
