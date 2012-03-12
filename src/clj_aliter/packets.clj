@@ -99,33 +99,41 @@
         data (gensym)
         size (gensym)]
     `(reify Packet
-        (header [this#] ~header)
+       (header [this#] ~header)
 
-        (packet-size [this# ~data]
-          (+ 2 ~@(map (fn [x]
-                        (let [size (segment-size (fnext x))]
-                          (if (vector? (fnext x))
-                            `(* (count (~(first x) ~data)) ~size)
-                            size)))
-                      structure)))
+       (packet-size [this# ~data]
+         (+ 2 ~@(map (fn [x]
+                       (let [size (segment-size (fnext x))]
+                         (if (vector? (fnext x))
+                           `(* (count (~(first x) ~data)) ~size)
+                           size)))
+                     structure)))
 
-        (encode [this# ~data]
-          (let [~size (packet-size this# ~data)
-                ~buffer (ByteBuffer/allocate ~size)]
-            (.order ~buffer ByteOrder/LITTLE_ENDIAN)
-            (.putShort ~buffer (header this#))
-            ~@(map #(segment-writer buffer data size %) structure)
-            (.rewind ~buffer)
-            ~buffer))
+       (encode [this# ~data]
+         (let [~size (packet-size this# ~data)
+               ~buffer (ByteBuffer/allocate ~size)]
+           (.order ~buffer ByteOrder/LITTLE_ENDIAN)
+           (.putShort ~buffer (header this#))
+           ~@(map #(segment-writer buffer data size %) structure)
+           (.flip ~buffer)
+           ~buffer))
 
-        (decode [this# ~buffer]
-          (hash-map :header (.getShort ~buffer)
-                    ~@(apply concat
-                             (map #(segment-reader buffer %) structure)))))))
+       (decode [this# ~buffer]
+         (hash-map ~@(apply concat
+                            (map #(segment-reader buffer %) structure)))))))
 
 
 (defmacro defpacket [header name doc & structure]
   "Helper for defining packet types."
 
-  `(def ~(with-meta name (merge {:doc doc} (meta name)))
+  ; TODO: verify that this adds doc metadata, not replaces
+  `(def ^{:doc ~doc} ~name
      (make-packet ~header ~@structure)))
+
+
+(defmacro defpackets [& packets]
+  `(do
+     ~@(map (fn [x] `(defpacket ~@x)) packets)
+
+     (def ~(symbol "packets")
+        (hash-map ~@(apply concat (map #(take 2 %) packets))))))

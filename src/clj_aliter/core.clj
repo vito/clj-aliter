@@ -1,5 +1,6 @@
 (ns clj-aliter.core
-  (:use clj-aliter.login.login-packets))
+  (:use clj-aliter.server.login))
 
 (defn -main []
-  (println "done"))
+  (println "running")
+  (start 2323))
