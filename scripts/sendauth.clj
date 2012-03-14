@@ -16,8 +16,8 @@
   (.rewind response))
 
 (defn -main []
-  (let [channel (SocketChannel/open (InetSocketAddress. "127.0.0.1" 2323))
-        response (ByteBuffer/allocate 23)
+  (let [channel (SocketChannel/open (InetSocketAddress. "127.0.0.1" 6900))
+        response (ByteBuffer/allocate 100)
         encoded (encode login/auth
                         {:packet-version 27
                         :login "Alex"
