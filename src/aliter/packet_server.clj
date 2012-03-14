@@ -56,12 +56,14 @@
     (.order body ByteOrder/LITTLE_ENDIAN)
     (.read channel body)
     (.flip body)
-    (send state handle
-          packet
-          (decode packet body)
-          (fn [send-packet send-body]
-            (let [encoded (encode send-packet send-body)]
-              (.write channel encoded))))))
+    (if packet
+      (send state handle
+            packet
+            (decode packet body)
+            (fn [send-packet send-body]
+              (let [encoded (encode send-packet send-body)]
+                (.write channel encoded))))
+      (println (format "Unknown packet: 16r%x" header)))))
 
 
 (defn read-socket [selected-key]

@@ -20,7 +20,6 @@
                              :name "CLJ Aliter"
                              :maintenance 0
                              :new 0}]})
-        (println "sent")
         (assoc state :mode :authenticated))
       (do
         (respond login/refuse {:reason 1})
