@@ -15,12 +15,13 @@
                 (:id account)
                 (redis/incr "accounts:id"))
           acc (str "account:" id)]
-      (redis/hset acc "login" (:login account))
-      (redis/hset acc "password" (:password account))
-      (redis/hset acc "email" (:email account))
-      (redis/hset acc "gender" (:gender account))
-      (redis/hset acc "last-login" (:last-login account))
-      (redis/hset acc "last-ip" (:last-ip account))
+      (redis/hmset acc
+        "login" (:login account)
+        "password" (:password account)
+        "email" (:email account)
+        "gender" (:gender account)
+        "last-login" (:last-login account)
+        "last-ip" (:last-ip account))
 
       (redis/hset (str "account:" (:login account)) id)))
 
