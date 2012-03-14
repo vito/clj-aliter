@@ -11,7 +11,7 @@
 
 (defprotocol PacketHandler
   (packets [ph] "The packets handled by this handler.")
-  (handle [ph packet response] "Handle a packet, returning the new state."))
+  (handle [ph packet body response] "Handle a packet, returning the new state."))
 
 
 (defn selector [ssc]
@@ -56,7 +56,12 @@
     (.order body ByteOrder/LITTLE_ENDIAN)
     (.read channel body)
     (.flip body)
-    (send state handle (decode packet body) channel)))
+    (send state handle
+          packet
+          (decode packet body)
+          (fn [send-packet send-body]
+            (let [encoded (encode send-packet send-body)]
+              (.write channel encoded))))))
 
 
 (defn read-socket [selected-key]

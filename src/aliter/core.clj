@@ -3,4 +3,4 @@
 
 (defn -main []
   (println "running")
-  (start 2323))
+  (start 6900))
