@@ -1,4 +1,4 @@
-(ns clj-aliter.zone-fsm)
+(ns aliter.zone-fsm)
 
 (defn greet
   []

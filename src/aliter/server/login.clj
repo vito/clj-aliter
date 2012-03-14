@@ -1,7 +1,7 @@
-(ns clj-aliter.server.login
-  (:use clj-aliter.packets)
-  (:require [clj-aliter.login.login-packets :as login]
-            [clj-aliter.packet-server :as server]))
+(ns aliter.server.login
+  (:use aliter.packets)
+  (:require [aliter.login.packets :as login]
+            [aliter.packet-server :as server]))
 
 (deftype LoginState [packets]
   server/PacketHandler

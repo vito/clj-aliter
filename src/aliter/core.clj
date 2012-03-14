@@ -1,5 +1,5 @@
-(ns clj-aliter.core
-  (:use clj-aliter.server.login))
+(ns aliter.core
+  (:use aliter.server.login))
 
 (defn -main []
   (println "running")

@@ -1,8 +1,8 @@
 (ns sendauth
-  (:require [clj-aliter.login.login-packets :as login])
+  (:require [aliter.login.packets :as login])
 
   (:use criterium.core
-        clj-aliter.packets)
+        aliter.packets)
 
   (:import
     [java.net InetSocketAddress]

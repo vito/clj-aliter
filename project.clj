@@ -1,4 +1,4 @@
-(defproject clj-aliter "0.1.0-SNAPSHOT"
+(defproject aliter "0.1.0-SNAPSHOT"
   :description "Experimental port of Aliter to Clojure."
   :url "http://projectaliter.com/"
 
@@ -7,4 +7,4 @@
   :profiles {:dev {:source-paths ["scripts" "src" "test"]
                    :dependencies [[criterium "0.2.1-SNAPSHOT"]]}}
 
-  :main clj-aliter.core)
+  :main aliter.core)

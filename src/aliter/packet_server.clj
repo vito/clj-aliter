@@ -1,7 +1,7 @@
-(ns clj-aliter.packet-server
-  (:require [clj-aliter.login.login-packets :as login])
+(ns aliter.packet-server
+  (:require [aliter.login.packets :as login])
 
-  (:use clj-aliter.packets
+  (:use aliter.packets
         clojure.pprint)
 
   (:import [java.net InetSocketAddress]

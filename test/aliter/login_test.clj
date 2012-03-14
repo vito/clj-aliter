@@ -1,7 +1,7 @@
-(ns clj-aliter.login-test
-  (:require [clj-aliter.login.login-packets :as login])
+(ns aliter.login-test
+  (:require [aliter.login.packets :as login])
   (:use clojure.test
-        clj-aliter.client-test))
+        aliter.client-test))
 
 (use-fixtures :each with-connection)
 

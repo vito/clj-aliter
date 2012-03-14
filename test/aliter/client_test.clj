@@ -1,6 +1,6 @@
-(ns clj-aliter.client-test
+(ns aliter.client-test
   (:use clojure.test
-        clj-aliter.packets)
+        aliter.packets)
 
   (:import
     [java.net InetSocketAddress]

@@ -1,4 +1,4 @@
-(ns clj-aliter.packets
+(ns aliter.packets
   (:import [java.nio ByteOrder ByteBuffer]))
 
 
