@@ -58,6 +58,14 @@
            ~@(map #(segment-writer buffer data size %) what)))))
 
 
+(defn null-terminated [bytes]
+  (let [str (String. bytes)
+        end (.indexOf str 0)]
+    (if (= -1 end)
+      str
+      (.substring str 0 end))))
+
+
 (defn- segment-reader [buffer segment]
   "Read a segment from the buffer, yielding the name-value pair for the
   resulting map."
@@ -83,7 +91,7 @@
           `(~name (let [~bs (byte-array ~size)]
                     (.get ~buffer ~bs)
                     ~(case type
-                       :string `(String. ~bs)
+                       :string `(null-terminated ~bs)
                        bs))))
 
       ; repeated sub-packet
