@@ -34,7 +34,13 @@
   (let [channel (.getChannel (.accept server-socket))]
     (println "Connected to" channel)
     (.configureBlocking channel false)
-    (.register channel selector SelectionKey/OP_READ (agent handler))))
+    (let [state (agent handler)]
+      (set-error-handler! state
+                          (fn [a e]
+                            (println (.getMessage e))
+                            (.printStackTrace e)
+                            (.close (.socket channel))))
+      (.register channel selector SelectionKey/OP_READ state))))
 
 
 (defn disconnected [selected-key]
