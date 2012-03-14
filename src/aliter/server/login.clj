@@ -28,4 +28,5 @@
       this)))
 
 (defn start [port]
-  (server/run (LoginState. :normal login/packets) port))
+  (with-db
+    (server/run (LoginState. login/packets) port)))
