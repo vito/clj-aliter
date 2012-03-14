@@ -3,6 +3,7 @@
   :url "http://projectaliter.com/"
 
   :dependencies [[org.clojure/clojure "1.3.0"]
+                 [org.clojure/tools.nrepl "0.2.0-beta2"]
                  [org.clojars.tavisrudd/redis-clojure "1.3.1"]]
 
   :profiles {:dev {:source-paths ["scripts" "src" "test"]

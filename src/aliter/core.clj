@@ -1,6 +1,7 @@
 (ns aliter.core
-  (:use aliter.server.login))
+  (:require [clojure.tools.nrepl.server :as nrepl]
+            [aliter.server.login :as login]))
 
 (defn -main []
-  (println "running")
-  (start 6900))
+  (future (login/start 6900))
+  (nrepl/start-server :port 7888))
