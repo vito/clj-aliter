@@ -10,7 +10,7 @@
 (defn ^:dynamic *channel*)
 
 (defn with-connection [f]
-  (binding [*channel* (SocketChannel/open (InetSocketAddress. "127.0.0.1" 2323))]
+  (binding [*channel* (SocketChannel/open (InetSocketAddress. "127.0.0.1" 6900))]
     (f)))
 
 (defn expect [response packet data]
