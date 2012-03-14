@@ -27,15 +27,18 @@
   account)
 
 (defn get-account [id]
-  (let [acc (str "account:" id)]
-    (Account.
-      id
-      (redis/hget acc "login")
-      (redis/hget acc "password")
-      (redis/hget acc "email")
-      (Integer/parseInt (redis/hget acc "gender"))
-      (redis/hget acc "last-login")
-      (redis/hget acc "last-ip"))))
+  (let [attrs (redis/hgetall (str "account:" id))]
+    (when attrs
+      (Account.
+        id
+        (attrs "login")
+        (attrs "password")
+        (attrs "email")
+        (Integer/parseInt (attrs "gender"))
+        (attrs "last-login")
+        (attrs "last-ip")))))
 
 (defn get-account-id [login]
-  (Integer/parseInt (redis/get (str "account:" login))))
+  (let [id (redis/get (str "account:" login))]
+    (when id
+      (Integer/parseInt id))))
