@@ -9,7 +9,7 @@
   server/PacketHandler
   (packets [this] packets)
 
-  (handle [this packet body respond]
+  (handle [this state packet body respond]
     (let [id (get-account-id (:login body))]
       (if id
         (let [account (get-account id)
@@ -36,4 +36,4 @@
 
 (defn start [port]
   (with-db
-    (server/run (LoginState. login/packets) port)))
+    (server/run port (LoginState. login/packets))))

@@ -11,7 +11,8 @@
 
 (defprotocol PacketHandler
   (packets [ph] "The packets handled by this handler.")
-  (handle [ph packet body response] "Handle a packet, returning the new state."))
+  (handle [ph state packet body response]
+          "Handle a packet, returning the new handler state."))
 
 
 (defn selector [ssc]
@@ -49,15 +50,16 @@
   (.close (.socket (.channel selected-key))))
 
 
-(defn handle-packet [selected-key channel header]
-  (let [state (.attachment selected-key)
-        packet ((packets (deref state)) header)
+(defn handle-packet [state selected-key channel header]
+  (let [handler (.attachment selected-key)
+        packet ((packets (deref handler)) header)
         body (ByteBuffer/allocate 1024)] ; TODO
     (.order body ByteOrder/LITTLE_ENDIAN)
     (.read channel body)
     (.flip body)
     (if packet
-      (send state handle
+      (send handler handle
+            state
             packet
             (decode packet body)
             (fn [send-packet send-body]
@@ -66,7 +68,7 @@
       (println (format "Unknown packet: 16r%x" header)))))
 
 
-(defn read-socket [selected-key]
+(defn read-socket [state selected-key]
   (let [channel (.channel selected-key)
         header-buffer (ByteBuffer/allocate 2)]
     (.order header-buffer ByteOrder/LITTLE_ENDIAN)
@@ -75,14 +77,14 @@
 
     (if (= (.limit header-buffer) 0)
       (disconnected selected-key)
-      (handle-packet selected-key channel (.getShort header-buffer)))))
+      (handle-packet state selected-key channel (.getShort header-buffer)))))
 
 
-(defn ready-for? [state channel]
-  (= (bit-and (.readyOps channel) state) state))
+(defn ready-for? [operation channel]
+  (= (bit-and (.readyOps channel) operation) operation))
 
 
-(defn react [handler selector server-socket]
+(defn react [state handler selector server-socket]
   (while true
     (when (> (.select selector) 0)
       (let [selected-keys (.selectedKeys selector)]
@@ -92,10 +94,14 @@
               (accept-connection handler server-socket selector)
 
             SelectionKey/OP_READ
-              (read-socket k)))
+              (read-socket state k)))
 
         (.clear selected-keys)))))
 
 
-(defn run [handler port]
-  (apply react handler (setup port)))
+(defn run
+  ([port handler state]
+    (apply react (agent state) handler (setup port)))
+
+  ([port handler]
+    (apply react nil handler (setup port))))

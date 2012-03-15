@@ -8,10 +8,10 @@
   server/PacketHandler
   (packets [this] packets)
 
-  (handle [this packet body respond]
+  (handle [this state packet body respond]
     (println "got packet" body)
     this))
 
 (defn start [port]
   (with-db
-    (server/run (CharState. (packets/versions 24)) port)))
+    (server/run port (CharState. (packets/versions 24)))))
