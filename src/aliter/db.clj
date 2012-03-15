@@ -44,6 +44,7 @@
 
   account)
 
+
 (defn get-account [id]
   (let [attrs (redis/hgetall (str "account:" id))]
     (when attrs
@@ -56,10 +57,12 @@
         (attrs "last-login")
         (attrs "last-ip")))))
 
+
 (defn get-account-id [login]
   (let [id (redis/get (str "account:" login))]
     (when id
       (Integer/parseInt id))))
+
 
 
 (defn save-character [character]
@@ -122,6 +125,7 @@
 
   character)
 
+
 (defn get-character [id]
   (let [attrs (redis/hgetall (str "character:" id))]
     (when attrs
@@ -175,9 +179,11 @@
         (Integer/parseInt (attrs "homunculus-id"))
         (Integer/parseInt (attrs "mercenary-id"))))))
 
+
 (defn get-account-characters [id]
   (let [chars (redis/hgetall (str "account:" id ":chars"))]
     (map #(get-character (fnext %)) chars)))
+
 
 (defn get-account-character [id num]
   (let [idx (str num)
@@ -185,10 +191,12 @@
     (when (contains? chars idx)
       (get-character (chars idx)))))
 
+
 (defn get-character-id [name]
   (let [id (redis/get (str "character:" name))]
     (when id
       (Integer/parseInt id))))
+
 
 (defn rename-character [id old-name new-name]
   (let [chr (str "char:" id)]
