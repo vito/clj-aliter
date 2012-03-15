@@ -52,7 +52,8 @@
 
 (defn handle-packet [state selected-key channel header]
   (let [handler (.attachment selected-key)
-        packet ((packets (deref handler)) header)
+        packets (packets (deref handler))
+        packet (packets header)
         body (ByteBuffer/allocate 1024)] ; TODO
     (.order body ByteOrder/LITTLE_ENDIAN)
     (.read channel body)
@@ -62,9 +63,13 @@
             state
             packet
             (decode packet body)
-            (fn [send-packet send-body]
-              (let [encoded (encode send-packet send-body)]
-                (.write channel encoded))))
+            (fn
+              ([send-name send-body]
+               (let [send-packet (packets send-name)
+                     encoded (encode send-packet send-body)]
+                 (.write channel encoded)))
+              ([send-data]
+               (.write channel send-data))))
       (println (format "Unknown packet: 16r%x" header)))))
 
 

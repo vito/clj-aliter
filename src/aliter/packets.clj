@@ -3,6 +3,7 @@
 
 
 (defprotocol Packet
+  (packet-name [p] "The packet's name.")
   (header [p] "The identifying number for this packet.")
   (packet-size [p d] "The size of this packet when sent with data d.")
   (encode [p d] "Encode structure d into bytes described by p.")
@@ -100,13 +101,15 @@
           `(~name (hash-map ~@pairs))))))
 
 
-(defmacro make-packet [header & structure]
+(defmacro make-packet [name header & structure]
   "Create an anonymous type representing a given packet structure."
 
   (let [buffer (gensym)
         data (gensym)
         size (gensym)]
     `(reify Packet
+       (packet-name [this#] ~(keyword name))
+
        (header [this#] ~header)
 
        (packet-size [this# ~data]
@@ -136,7 +139,7 @@
 
   ; TODO: verify that this adds doc metadata, not replaces
   `(def ^{:doc ~doc} ~name
-     (make-packet ~header ~@structure)))
+     (make-packet ~name ~header ~@structure)))
 
 
 (defmacro defpackets [& packets]
@@ -144,4 +147,8 @@
      ~@(map (fn [x] `(defpacket ~@x)) packets)
 
      (def ~(symbol "packets")
-        (hash-map ~@(apply concat (map #(take 2 %) packets))))))
+        (hash-map ~@(apply concat (map (fn [[_ n]]
+                                         (list (keyword n) n))
+                                       packets))
+
+                  ~@(apply concat (map #(take 2 %) packets))))))

@@ -19,7 +19,7 @@
               id-b (.nextInt random max-id)]
           (set-login-token id-a id-b id)
 
-          (respond login/accept
+          (respond :accept
                    {:id-a id-a
                     :account-id id
                     :id-b id-b
@@ -30,7 +30,7 @@
                                :maintenance 0
                                :new 0}]}))
 
-        (respond login/refuse {:reason 1}))
+        (respond :refuse {:reason 1}))
 
       this)))
 
