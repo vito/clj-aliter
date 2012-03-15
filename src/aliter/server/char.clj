@@ -6,20 +6,13 @@
   (:import [java.nio ByteBuffer ByteOrder]))
 
 
-(defn encode-int [i]
-  (let [buf (ByteBuffer/allocate 4)]
-    (.order buf ByteOrder/LITTLE_ENDIAN)
-    (.putInt buf)
-    (.rewind buf)
-    buf))
-
 (defmulti respond-to
   (fn [packet body handler state respond] (packet-name packet)))
 
 
 (defmethod respond-to :connect [packet body handler state respond]
   ; TODO
-  (respond (encode-int (:account-id body)))
+  (respond (encode-single :int (:account-id body)))
   (respond :characters {:max-slots 9
                         :available-slots 9
                         :premium-slots 9

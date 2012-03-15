@@ -152,3 +152,13 @@
                                        packets))
 
                   ~@(apply concat (map #(take 2 %) packets))))))
+
+
+(defmacro encode-single [what data]
+  (let [size (segment-size what)
+        buffer (gensym)]
+    `(let [~buffer (ByteBuffer/allocate ~size)]
+       (.order ~buffer ByteOrder/LITTLE_ENDIAN)
+       ~(segment-writer buffer data size [data what])
+       (.rewind ~buffer)
+       ~buffer)))
