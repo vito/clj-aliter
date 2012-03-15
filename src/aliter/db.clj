@@ -9,6 +9,23 @@
      ~@body))
 
 
+; set login token and have it expire after 5 minutes
+(defn set-login-token [id-a id-b]
+  (let [tok (str "login-token:" id-a)]
+    (redis/atomically
+      (redis/set tok id-b)
+      (redis/expire tok (* 60 5)))))
+
+
+; get and delete login token
+(defn get-login-token [id-a]
+  (let [tok (str "login-token:" id-a)
+        res (redis/get tok)]
+    (redis/del tok)
+    res))
+
+
+
 (defn save-account [account]
   (redis/atomically
     (let [id (if (:id account)
