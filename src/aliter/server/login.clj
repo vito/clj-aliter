@@ -17,7 +17,7 @@
               max-id (- (Math/pow 2 31) 1)
               id-a (.nextInt random max-id)
               id-b (.nextInt random max-id)]
-          (set-login-token id-a id-b)
+          (set-login-token id-a id-b id)
 
           (respond login/accept
                    {:id-a id-a
