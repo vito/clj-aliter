@@ -55,7 +55,7 @@
 
       ; repeated sub-packet
       (vector? what)
-        `(let [[~data] ~value]
+        `(doseq [~data ~value]
            ~@(map #(segment-writer buffer data size %) what)))))
 
 
