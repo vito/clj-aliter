@@ -10,17 +10,21 @@
 
 
 ; set login token and have it expire after 5 minutes
-(defn set-login-token [id-a id-b account-id]
+(defn set-login-token [id-a id-b account-id packet-version]
   (let [tok (str "login-token:" id-a ":" id-b)]
     (redis/atomically
-      (redis/set tok account-id)
+      (redis/hmset tok
+        "account-id" account-id
+        "packet-version" packet-version)
       (redis/expire tok (* 60 5)))))
 
 
 ; get and delete login token
 (defn get-login-token [id-a id-b]
   (let [tok (str "login-token:" id-a ":" id-b)
-        res (redis/get tok)]
+        all (redis/hgetall tok)
+        res {:account-id (Integer/parseInt (all "account-id"))
+             :packet-version (Integer/parseInt (all "packet-version"))}]
     (redis/del tok)
     res))
 
