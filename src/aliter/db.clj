@@ -29,24 +29,24 @@
     res))
 
 
-
 (defn save-account [account]
-  (redis/atomically
-    (let [id (if (:id account)
-                (:id account)
-                (redis/incr "accounts:id"))
-          acc (str "account:" id)]
+  (let [id (if (:id account)
+             (:id account)
+             (redis/incr "accounts:id"))
+        acc (str "account:" id)]
+    (redis/atomically
       (redis/hmset acc
         "login" (:login account)
         "password" (:password account)
+        "salt" (:salt account)
         "email" (:email account)
         "gender" (:gender account)
         "last-login" (:last-login account)
         "last-ip" (:last-ip account))
 
-      (redis/hset (str "account:" (:login account)) id)))
+      (redis/set (str "account:" (:login account)) id))
 
-  account)
+    id))
 
 
 (defn get-account [id]
@@ -56,6 +56,7 @@
         id
         (attrs "login")
         (attrs "password")
+        (attrs "salt")
         (attrs "email")
         (Integer/parseInt (attrs "gender"))
         (attrs "last-login")
