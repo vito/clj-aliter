@@ -53,6 +53,13 @@
   handler)
 
 
+(defmethod respond-to :default [handler state packet body respond]
+  (println "WARNING: ignored packet"
+           (format "16r%x" (header packet))
+           "with body" body)
+  handler)
+
+
 
 (defrecord CharState [packets mode account-id]
   server/PacketHandler
