@@ -4,9 +4,23 @@
 
   (:import [aliter.data Account Char]))
 
+
+(def ^:dynamic *db-settings* {})
+
 (defmacro with-db [& body]
-  `(redis/with-server {}
+  `(redis/with-server *db-settings*
      ~@body))
+
+
+; called after tests run to clear everything in the testing db
+(defn flush-db! []
+  (redis/flushdb))
+
+(defn reset-db! []
+  (flush-db!)
+  (redis/set "accounts:id" 1999999)
+  (redis/set "characters:id" 149999)
+  true)
 
 
 ; set login token and have it expire after 5 minutes

@@ -3,7 +3,10 @@
             [aliter.server.login :as login]
             [aliter.server.char :as char]))
 
+(defn start-servers []
+  [(future (login/start 6900))
+   (future (char/start 5121))])
+
 (defn -main []
-  (future (login/start 6900))
-  (future (char/start 5121))
+  (start-servers)
   (nrepl/start-server :port 7888))
