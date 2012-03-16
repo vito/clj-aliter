@@ -66,9 +66,9 @@
   (packets [this] packets)
 
   (handle [this state packet body respond]
-    (respond-to this state packet body respond)))
+    (with-db
+      (respond-to this state packet body respond))))
 
 
 (defn start [port]
-  (with-db
-    (server/run port (CharState. (packets/versions 24) :locked nil))))
+  (server/run port (CharState. (packets/versions 24) :locked nil)))
