@@ -168,7 +168,7 @@
    "Rename request result."
    (:reason :short)]
 
-  [16r889 pin-code
+  [16r8B9 pin-code
    "?"
    (0 :short)
    (0 :short)
