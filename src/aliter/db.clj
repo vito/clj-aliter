@@ -190,14 +190,14 @@
 
 (defn get-account-characters [id]
   (let [chars (redis/hgetall (str "account:" id ":chars"))]
-    (map #(get-character (fnext %)) chars)))
+    (map #(get-character (Integer/parseInt (fnext %))) chars)))
 
 
 (defn get-account-character [id num]
   (let [idx (str num)
         chars (redis/hgetall (str "account:" id ":chars"))]
     (when (contains? chars idx)
-      (get-character (chars idx)))))
+      (get-character (Integer/parseInt (chars idx))))))
 
 
 (defn get-character-id [name]
